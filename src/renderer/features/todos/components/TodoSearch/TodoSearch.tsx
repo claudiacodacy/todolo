@@ -1,3 +1,5 @@
+import React from 'react';
+
 type Props = {
   query: string;
   onSearch: (q: string) => void;
