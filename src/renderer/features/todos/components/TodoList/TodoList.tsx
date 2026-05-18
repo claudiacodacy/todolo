@@ -26,12 +26,14 @@ type Props = {
   appSettings: AppSettings;
   setInputRef: (id: number, el: HTMLTextAreaElement | null) => void;
   focusTodo: (id: number) => void;
+  searchQuery?: string;
 };
 
 const TodoList = React.memo(function TodoList({
   appSettings,
   setInputRef,
   focusTodo,
+  searchQuery = '',
 }: Props) {
   const updateTodo = useTodosStore((s) => s.updateTodo);
   const toggleTodo = useTodosStore((s) => s.toggleTodo);
@@ -39,7 +41,12 @@ const TodoList = React.memo(function TodoList({
   const removeTodoAt = useTodosStore((s) => s.removeTodoAt);
   const changeIndent = useTodosStore((s) => s.changeIndent);
 
-  const allTodos = useSelectedTodos();
+  const rawTodos = useSelectedTodos();
+  const allTodos = searchQuery.trim()
+    ? rawTodos.filter((t) =>
+        t.text.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : rawTodos;
 
   // Adapter to allow hooks expecting setSelectedTodos(updater)
   const setSelectedTodos = React.useCallback(

@@ -2,6 +2,8 @@ import React from 'react';
 import ListSidebar from '../ListSidebar/ListSidebar';
 import TodoList from '../TodoList/TodoList';
 import TodoListHeader from '../TodoListHeader/TodoListHeader';
+import { TodoSearch } from '../TodoSearch/TodoSearch';
+import { useSearchFilter } from '../../hooks/useSearchFilter';
 import type { AppSettings } from '../../types';
 import { useSelectedTodos } from '../../store/useTodosStore';
 import useTodoFocus, { useTodoFocusEffect } from '../../hooks/useTodoFocus';
@@ -44,6 +46,7 @@ export default function TodoApp(): React.ReactElement {
   );
 
   const allTodos = useSelectedTodos();
+  const { query, handleSearch } = useSearchFilter(allTodos);
 
   const { inputByIdRef, focusNextIdRef, setInputRef, focusTodo } =
     useTodoFocus();
@@ -65,10 +68,13 @@ export default function TodoApp(): React.ReactElement {
             onUpdateAppSettings={updateAppSettings}
           />
 
+          <TodoSearch query={query} onSearch={handleSearch} />
+
           <TodoList
             appSettings={appSettings}
             setInputRef={setInputRef}
             focusTodo={focusTodo}
+            searchQuery={query}
           />
         </div>
 
